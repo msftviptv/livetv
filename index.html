@@ -83,7 +83,7 @@ function getPlaylists(playlists) {
   $('#result').html(''); // empty list
 
   $.ajax({
-    url: 'http://codesniff.com/scripts/GC-m3u-parser/GC-m3u-parser.php',
+    url: 'https://raw.githubusercontent.com/msftviptv/anaconda/master/api/getChannelsByCategory/free.m3u',
     method: 'GET',
     dataType: 'jsonP',
     data: {
