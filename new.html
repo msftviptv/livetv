@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Get m3u Playlist</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <script
+    type="text/javascript"
+    src="//code.jquery.com/jquery-2.2.2.js"
+    
+  ></script>
+
+    
+
+  <style id="compiled-css" type="text/css">
+          #m3uplaylist {
+      float: right;
+      max-width: 45%;
+      background-color: #f6f6f6;
+      padding: 10px;
+    }
+    
+    ul#result {
+      padding: 0;
+      list-style-type: none;
+      height: 650px;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+    
+    ul#result li {
+      border-bottom: 1px solid #ccc;
+      margin: 8px 0
+    }
+    
+    .bold {
+      font-weight: bold;
+    }
+
+    /* EOS */
+  </style>
+
+  <script id="insert"></script>
+
+
+</head>
+<body>
+    <form id="m3uForm" action="fichier.php" method="post">
+  <label for="pseudo">RSS URL</label>
+  <input type="text" id="playlists" name="playlists" size="45" value="https://raw.githubusercontent.com/msftviptv/anaconda/master/api/getChannelsByCategory/free.m3u" />
+  <input type="submit" id="envoyer" value="Get m3u Playlists" />
+</form>
+<ul id="result"></ul>
+
+
+    <script type="text/javascript">//<![CDATA[
+
+
+$(document).ready(function() {
+
+  //load playist on ready
+  getPlaylists("https://raw.githubusercontent.com/msftviptv/anaconda/master/api/getChannelsByCategory/free.m3u");
+
+  $('#m3uForm').on('submit', function(e) {
+    e.preventDefault();
+
+    //var $this = $(this);
+    var playlists = $('#playlists').val();
+
+    getPlaylists(playlists);
+
+  });
+});
+
+function getPlaylists(playlists) {
+
+  $('#result').html(''); // empty list
+
+  $.ajax({
+    url: 'http://codesniff.com/scripts/GC-m3u-parser/GC-m3u-parser.php',
+    method: 'GET',
+    dataType: 'jsonP',
+    data: {
+      url: playlists,
+      //url: 'https://www.rt.com/rss',
+      //api_key: 'z6hgvtruazf0ghcv27xrgo6ieyznezyet0i9khad', // put your api key here
+      // count: 5
+    }
+  }).done(function(data) {
+    //if(data.status != 'ok'){ throw data.message; }
+
+    $('#result').text('Total: ' + data.length + ' Channels found'); // TOTAL COUNT
+
+    $.each(data, function(i, item) {
+
+      var tvglogo = '';
+
+      if (typeof item["tvg-logo"] != 'undefined')
+        tvglogo = '<img src="' + item["tvg-logo"] + '" alt="Mountain View" style="width:38px;height:38px;float:left;marging: 5px;border:solid 1px #ccc;margin-right:5px">';
+
+      $('#result').append('<li><a href="' + item.url + '">' + tvglogo + ' ► ' + item.title + '</a><br>' + item.url + '</li>');
+
+    });
+
+  });
+
+}
+
+
+
+  //]]></script>
+
+  <script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent){
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "ofd9j17v"
+      }], "*")
+    }
+
+    // always overwrite window.name, in case users try to set it manually
+    window.name = "result"
+  </script>
+
+
+</body>
+</html>
